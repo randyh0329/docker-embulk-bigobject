@@ -2,8 +2,11 @@ FROM alpine:3.3
 
 # Install cURL
 RUN apk --update add curl ca-certificates tar && \
-    curl -Ls https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk > /tmp/glibc-2.21-r2.apk && \
-    apk add --allow-untrusted /tmp/glibc-2.21-r2.apk
+    	curl -Ls https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk > /tmp/glibc-2.21-r2.apk && \
+    	apk add --allow-untrusted /tmp/glibc-2.21-r2.apk && \
+	apk add --update bash && \
+        rm -rf /var/cache/apk/*  \
+               /tmp/*
 
 # Java Version
 ENV JAVA_VERSION_MAJOR 8
@@ -41,7 +44,7 @@ RUN mkdir /opt && curl -jksSLH "Cookie: oraclelicense=accept-securebackup-cookie
 ENV JAVA_HOME /opt/jdk
 ENV PATH ${PATH}:${JAVA_HOME}/bin
 
-# add embulk & install
+# Download embulk & install BigObject output plugin
 RUN curl -L http://dl.embulk.org/embulk-latest.jar -o /opt/embulk
 
 RUN java -jar /opt/embulk gem install embulk-output-bigobject
